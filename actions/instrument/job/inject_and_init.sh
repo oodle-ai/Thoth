@@ -208,7 +208,7 @@ echo "$new_binary_dir" >> "$GITHUB_PATH"
 ( if type bash; then gcc -o "$new_binary_dir"/bash forward.c -DEXECUTABLE="$(which bash)" -DARG1="$GITHUB_ACTION_PATH"/decorate_action_run.sh -DARG2="$(which bash)"; fi 2>&1 | perl -0777 -pe '' ) &
 for node_path in "$(readlink -f /proc/*/exe | grep '/Runner.Worker$' | rev | cut -d / -f 4- | rev)"/*/externals/node*/bin/node; do
   dir_path_new="$relocated_binary_dir"/"$(echo "$node_path" | rev | cut -d / -f 3 | rev)"
-  mkdir "$dir_path_new"
+  mkdir -p "$dir_path_new"
   node_path_new="$dir_path_new"/node
   mv "$node_path" "$node_path_new"
   gcc -o "$node_path" forward.c -DEXECUTABLE=/bin/bash -DARG1="$GITHUB_ACTION_PATH"/decorate_action_node.sh -DARG2="$node_path_new" 2>&1 | perl -0777 -pe '' & # path is hardcoded in the runners
